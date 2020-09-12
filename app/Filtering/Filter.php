@@ -29,5 +29,6 @@ class Filter
   protected function limitFilters(array $filters)
   {
     return array_only($filters, array_keys($this->request->all()));
+
   }
 }

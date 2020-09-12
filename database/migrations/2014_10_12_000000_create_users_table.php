@@ -22,7 +22,8 @@ class CreateUsersTable extends Migration
             $table->string('lastname')->nullable();
             $table->string('username')->unique();
             $table->string('avatar')->default('user.jpg');
-            $table->string('email');
+            $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->float('train_distance')->default(0.00);
             $table->unsignedInteger('train_duration')->default(0);  //travel_time

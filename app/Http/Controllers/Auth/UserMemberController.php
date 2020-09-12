@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
-use App\Models\UserMember;
+use App\User;
 use Illuminate\Validation\Validator;
 use App\Http\Resources\Auth\UserMembersResource;
 
@@ -40,7 +40,7 @@ class UserMemberController extends Controller
         if (Auth::guest()||Auth::user()->profil_id !==1) {
             return response()->json(['error' => 'You are not authorised to do this operation.'], 403);
         }
-        $listUsers = UserMember::all();
+        $listUsers = User::all();
         return $listUsers;
 
         // Using Paginate method
@@ -59,7 +59,7 @@ class UserMemberController extends Controller
     {
         return (Auth::check())?
         (Auth::user()->profil_id ==1 || Auth::user()->id == $id)?
-        new UserMembersResource(UserMember::with('Profils')->findOrFail($id))
+        new UserMembersResource(User::with('Profils')->findOrFail($id))
         :
         response()->json(['error' => 'You can only check your own account.'], 403)
         :
@@ -73,7 +73,7 @@ class UserMemberController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, UserMember $userMember)
+    public function update(Request $request, User $user)
     {
             $validator = $this->validator::make($request->all(), [
             'firstname' => 'required|string|max:255|min:2',
@@ -90,17 +90,17 @@ class UserMemberController extends Controller
 
         // check if currently authenticated user is the user owner
         if(Auth::guest())return response()->json(['error' => 'You are not authorised to do this operation.'], 403);
-        if ($request->user()->profil_id !==1 && $request->user()->id !== $userMember->id) {
+        if ($request->user()->profil_id !==1 && $request->user()->id !== $user->id) {
             return response()->json(['error' => 'You can only edit your own account.'], 403);
         }
 
         $request['password']= Hash::make($request['password']);
-        if($userMember->profil_id !==1)
-        $userMember->update($request->only(['email', 'firtname', 'lastname', 'password']));
+        if($user->profil_id !==1)
+        $user->update($request->only(['email', 'firtname', 'lastname', 'password']));
         else
-        $userMember->update($request->all());
+        $user->update($request->all());
 
-        return new UserMembersResource($userMember);
+        return new UserMembersResource($user);
     }
 
     /**
@@ -114,7 +114,7 @@ class UserMemberController extends Controller
         if (Auth::user()->profil_id !==1) {
             return response()->json(['error' => 'You are not authorised to do this operation.'], 403);
         }
-        $deleteUserById = UserMember::find($id)->delete();
+        $deleteUserById = User::find($id)->delete();
         return response()->json([], 204);
     }
 

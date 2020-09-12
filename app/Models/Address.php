@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Traits\CanBeDefault;
+use App\Traits\CanBeDefault;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
 

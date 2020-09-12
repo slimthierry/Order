@@ -19,31 +19,28 @@ Route::apiResources([
     'categories'                            =>'CategoriesController',
     'products'                              => 'ProductController',
     'addresses'                             => 'AddressController',
-    'countries'                             => 'CountryController',
+    'countries'                              => 'CountryController',
     'orders'                                  => 'OrderController',
-    'payment-methods'=> 'PaymentMethodController',
-    'employes' => 'EmployeController',
-    'customer' => 'CustomerController',
+    'payment-methods'               => 'PaymentMethodController',
+    'employes'                              => 'EmployeController',
+    'customer'                              => 'CustomerController',
 
     'addresses/{address}/shipping'=> 'AddressShippingController@action',
 
     'employes/{employe}/ratings' => 'RatingController'
 ]);
-// Route::resource('categories', 'CategoriesController');
 
-
-
+// Cart Routing
 Route::resource('cart', 'Cart\CartController', [
   'parameters' => [
     'cart' => 'productVariation'
   ]
 ]);
 
-Route::group(['prefix' => 'auth'], function () {
-  Route::post('login', 'Auth\LoginController@action');
-  Route::post('register', 'Auth\RegisterController@action');
-  Route::get('me', 'Auth\MeController@action');
-});
+// Routes
+Route::post('register', 'AuthController@register');
+Route::post('login', 'AuthController@login');
+Route::post('logout', 'AuthController@logout');
 
 
 // Register Routes
@@ -55,8 +52,6 @@ Route::post('logout', 'AuthController@logout');
 Route::middleware('jwt.auth')->get('me', function(Request $request) {
     return auth()->user();
 });
-
-
 
 // Route::middleware('auth:api')->get('/user', function (Request $request) {
 //     return $request->user();
